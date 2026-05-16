@@ -16,6 +16,10 @@ public class PlayerController : MonoBehaviour
 
     public Transform holdPoint;
 
+    public LayerMask whatIsStock;
+
+    public LayerMask whatIsShelf;
+
     public float moveSpeed = 5f;
 
     public float lookSpeed = 10f;
@@ -30,9 +34,7 @@ public class PlayerController : MonoBehaviour
 
     private float horiRot, vertRot;
 
-    public LayerMask whatIsStock;
-
-    private GameObject heldPickup;
+    private StockObject heldPickup;
 
     public float throwForce;
 
@@ -99,26 +101,53 @@ public class PlayerController : MonoBehaviour
             {
                 if (Physics.Raycast(ray, out hit, interactionRange, whatIsStock))
                 {
-                    heldPickup = hit.collider.gameObject;
+                    heldPickup = hit.collider.GetComponent<StockObject>();
                     heldPickup.transform.SetParent(holdPoint);
-                    heldPickup.transform.localPosition = Vector3.zero;
-                    heldPickup.transform.localRotation = Quaternion.identity;
-                    heldPickup.GetComponent<Rigidbody>().isKinematic = true;
+                    heldPickup.Pickup();
                 }
             }
+            if (Mouse.current.rightButton.wasPressedThisFrame)
+            {
+                if (Physics.Raycast(ray, out hit, interactionRange, whatIsShelf))
+                {
+                    heldPickup = hit.collider.GetComponent<ShelfSpaceController>().GetStock();
+                    
+                    if (heldPickup != null)
+                    {
+                        heldPickup.transform.SetParent(holdPoint);
+                        heldPickup.Pickup();
+                    }
+                }
+            }
+
+
+
+
         }
         else
         {
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                if (Physics.Raycast(ray, out hit, interactionRange, whatIsShelf))
+                {
+                    hit.collider.GetComponent<ShelfSpaceController>().PlaceStock(heldPickup);
+                    if (heldPickup.isPlaced == true)
+                    {
+                        heldPickup = null;
+                    }
+                }
+            }
 
-           if (Mouse.current.rightButton.wasPressedThisFrame)
-           {
-               Rigidbody pickupRB = heldPickup.GetComponent<Rigidbody>();
-               pickupRB.isKinematic = false;
-               pickupRB.AddForce(theCam.transform.forward * throwForce, ForceMode.Impulse);
+            if (Mouse.current.rightButton.wasPressedThisFrame)
+            {
+                heldPickup.Release();
 
-               heldPickup.transform.SetParent(null);
-               heldPickup = null;
-           }
+                heldPickup.theRB.AddForce(theCam.transform.forward * throwForce, ForceMode.Impulse);
+
+                heldPickup.transform.SetParent(null);
+                heldPickup = null;
+
+            }
         }
     }
 }

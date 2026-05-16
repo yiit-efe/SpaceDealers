@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8981145562737500203
+--- !u!1 &2176142214623834694
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,49 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7031863287882037629}
-  - component: {fileID: 42666384514725592}
-  - component: {fileID: 1480735598569093267}
-  - component: {fileID: 2950007630714371244}
-  m_Layer: 0
-  m_Name: bottle1_water
+  - component: {fileID: 5035470681400206254}
+  - component: {fileID: 6835005129951586796}
+  - component: {fileID: 124785435963035067}
+  - component: {fileID: 6299713409545089855}
+  - component: {fileID: 2436114260318012756}
+  - component: {fileID: 128805420172077589}
+  m_Layer: 6
+  m_Name: aubergine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7031863287882037629
+--- !u!4 &5035470681400206254
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8981145562737500203}
+  m_GameObject: {fileID: 2176142214623834694}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.18, y: 0.18, z: 0.18}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &42666384514725592
+--- !u!33 &6835005129951586796
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8981145562737500203}
-  m_Mesh: {fileID: -6454219733271713012, guid: 43f210c109988da4ba132538bd2cd39c, type: 3}
---- !u!23 &1480735598569093267
+  m_GameObject: {fileID: 2176142214623834694}
+  m_Mesh: {fileID: -4917521401458447262, guid: 1edcafb3bf19d7c4f824e21c097be94d, type: 3}
+--- !u!23 &124785435963035067
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8981145562737500203}
+  m_GameObject: {fileID: 2176142214623834694}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -87,13 +89,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2950007630714371244
+--- !u!64 &6299713409545089855
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8981145562737500203}
+  m_GameObject: {fileID: 2176142214623834694}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -108,4 +110,52 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -6454219733271713012, guid: 43f210c109988da4ba132538bd2cd39c, type: 3}
+  m_Mesh: {fileID: -4917521401458447262, guid: 1edcafb3bf19d7c4f824e21c097be94d, type: 3}
+--- !u!54 &2436114260318012756
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2176142214623834694}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &128805420172077589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2176142214623834694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c32d59b9cf14a0419acfb6d83aee048, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  info:
+    name: Aubergine
+    typeOfStock: 3
+    price: 0.5
+    stockObject: {fileID: 0}
+  moveSpeed: 5
+  isPlaced: 0
+  theRB: {fileID: 2436114260318012756}
+  col: {fileID: 6299713409545089855}
