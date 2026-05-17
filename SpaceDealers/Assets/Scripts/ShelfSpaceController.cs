@@ -100,7 +100,7 @@ public class ShelfSpaceController : MonoBehaviour
                     break;
 
                 case StockInfo.StockType.chipsTube:
-                   
+
                     objectToPlace.transform.SetParent(chipsTubePoints[objectsOnShelf.Count]);
 
                     break;
@@ -108,19 +108,19 @@ public class ShelfSpaceController : MonoBehaviour
                 case StockInfo.StockType.fruit:
 
                     objectToPlace.transform.SetParent(fruitPoints[objectsOnShelf.Count]);
-                    
+
                     break;
 
                 case StockInfo.StockType.fruitLarge:
 
-                   objectToPlace.transform.SetParent(fruitLargePoints[objectsOnShelf.Count]);
+                    objectToPlace.transform.SetParent(fruitLargePoints[objectsOnShelf.Count]);
 
                     break;
             }
 
             objectsOnShelf.Add(objectToPlace);
 
-            shelfLabel.text = "$" + objectsOnShelf[0].info.price;
+            UpdateDisplayPrice(info.currentPrice);
         }
 
 
@@ -144,5 +144,27 @@ public class ShelfSpaceController : MonoBehaviour
 
         return objectToReturn;
     }
+
+    public void StartPriceUpdate()
+    {
+        if (objectsOnShelf.Count > 0)
+        {
+            UIController.instance.OpenUpdatePrice(info);
+        }
+    }
+
+    public void UpdateDisplayPrice(float price)
+    {
+        if (objectsOnShelf.Count > 0)
+        {
+            info.currentPrice = price;
+
+            shelfLabel.text = "$" + info.currentPrice.ToString("F2");
+        }
+
+       
+
+    }
+
 
 }
