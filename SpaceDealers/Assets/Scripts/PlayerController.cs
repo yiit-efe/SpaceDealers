@@ -30,6 +30,10 @@ public class PlayerController : MonoBehaviour
 
     public float jumpForce = 5f;
 
+    private float jumpBuffer = 0.2f;
+
+    private float jumpBufferCounter = 0f;
+
     public float interactionRange;
 
     public float minLookAngle, maxLookAngle;
@@ -60,7 +64,7 @@ public class PlayerController : MonoBehaviour
     {
         if (UIController.instance.updatePricePanel != null)
         {
-           if (UIController.instance.updatePricePanel.activeSelf == true)
+            if (UIController.instance.updatePricePanel.activeSelf == true)
             {
                 return;
             }
@@ -94,15 +98,12 @@ public class PlayerController : MonoBehaviour
 
         moveAmount = moveAmount * moveSpeed;
 
-        if (charCon.isGrounded)
+        jumpBufferCounter -= Time.deltaTime;
+
+        if ((jumpAction.action.WasPressedThisFrame() || jumpAction.action.IsPressed()) && charCon.isGrounded && jumpBufferCounter <= 0)
         {
-            ySpeed = 0f;
-
-            if (jumpAction.action.WasPressedThisFrame())
-            {
-                ySpeed = jumpForce;
-            }
-
+            ySpeed = jumpForce;
+            jumpBufferCounter = jumpBuffer; // e.g. 0.2f
         }
 
         ySpeed += (Physics.gravity.y * Time.deltaTime);
@@ -197,9 +198,9 @@ public class PlayerController : MonoBehaviour
 
                         if (shelf != null)
                         {
-                           shelf.PlaceStock(heldPickup);
-                           
-                           if (heldPickup.isPlaced == true)
+                            shelf.PlaceStock(heldPickup);
+
+                            if (heldPickup.isPlaced == true)
                             {
                                 heldPickup = null;
                             }
@@ -234,7 +235,7 @@ public class PlayerController : MonoBehaviour
 
                 if (Keyboard.current.eKey.wasPressedThisFrame)
                 {
-            
+
                     heldBox.OpenClose();
 
                 }
@@ -252,7 +253,8 @@ public class PlayerController : MonoBehaviour
                                 placeStockCounter = waitToPlaceStock;
                             }
                         }
-                    } else
+                    }
+                    else
                     {
                         if (Physics.Raycast(ray, out hit, interactionRange, whatIsBin))
                         {
@@ -261,8 +263,8 @@ public class PlayerController : MonoBehaviour
                             heldBox = null;
                         }
                     }
-                    
-                    
+
+
                 }
 
                 if (Mouse.current.leftButton.isPressed)
