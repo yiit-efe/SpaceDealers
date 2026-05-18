@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (Physics.Raycast(ray, out hit, interactionRange, whatIsStock))
                 {
-                    heldPickup = hit.collider.GetComponent<StockObject>();
+                    heldPickup = hit.collider.GetComponentInParent<StockObject>();
                     heldPickup.transform.SetParent(holdPoint);
                     heldPickup.Pickup();
 
@@ -136,7 +136,7 @@ public class PlayerController : MonoBehaviour
 
                 if (Physics.Raycast(ray, out hit, interactionRange, whatIsStockBox))
                 {
-                    heldBox = hit.collider.GetComponent<StockBoxController>();
+                    heldBox = hit.collider.GetComponentInParent<StockBoxController>();
                     heldBox.transform.SetParent(boxHoldPoint);
                     heldBox.Pickup();
 
@@ -154,7 +154,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (Physics.Raycast(ray, out hit, interactionRange, whatIsShelf))
                 {
-                    heldPickup = hit.collider.GetComponent<ShelfSpaceController>().GetStock();
+                    heldPickup = hit.collider.GetComponentInParent<ShelfSpaceController>().GetStock();
 
                     if (heldPickup != null)
                     {
@@ -167,7 +167,7 @@ public class PlayerController : MonoBehaviour
 
                 if (Physics.Raycast(ray, out hit, interactionRange, whatIsStockBox))
                 {
-                    hit.collider.GetComponent<StockBoxController>().OpenClose();
+                    hit.collider.GetComponentInParent<StockBoxController>().OpenClose();
                 }
             }
 
@@ -208,7 +208,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
 
-                if (Mouse.current.rightButton.wasPressedThisFrame)
+                if (Mouse.current.rightButton.wasPressedThisFrame && heldPickup != null)
                 {
                     heldPickup.Release();
 
