@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
 
     public Transform holdPoint;
 
+    public Transform furniturePoint;
+
     public LayerMask whatIsStock;
 
     public LayerMask whatIsShelf;
@@ -23,6 +25,8 @@ public class PlayerController : MonoBehaviour
     public LayerMask whatIsStockBox;
 
     public LayerMask whatIsBin;
+
+    public LayerMask whatIsFurniture;
 
     public float moveSpeed = 5f;
 
@@ -45,6 +49,8 @@ public class PlayerController : MonoBehaviour
     private float horiRot, vertRot;
 
     private StockObject heldPickup;
+
+    public FurnitureController heldFurniture;
 
     public StockBoxController heldBox;
 
@@ -120,7 +126,7 @@ public class PlayerController : MonoBehaviour
         Ray ray = theCam.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
         RaycastHit hit;
 
-        if (heldPickup == null && heldBox == null)
+        if (heldPickup == null && heldBox == null && heldFurniture == null)
         {
 
 
@@ -184,6 +190,20 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+
+            if (Keyboard.current.rKey.wasPressedThisFrame)
+            {
+                if (Physics.Raycast(ray, out hit, interactionRange, whatIsFurniture))
+                {
+                    heldFurniture = hit.transform.GetComponent<FurnitureController>();
+                    heldFurniture.transform.SetParent(furniturePoint);
+                    heldFurniture.transform.localPosition = Vector3.zero;
+                    heldFurniture.transform.localRotation = Quaternion.identity;
+
+                    heldFurniture.MakePlacable();
+                }
+            }
+
 
         }
         else
@@ -283,6 +303,21 @@ public class PlayerController : MonoBehaviour
                             }
                         }
                     }
+                }
+            }
+
+            if (heldFurniture != null)
+            {
+                heldFurniture.transform.position = new Vector3 (furniturePoint.position.x, 0f, furniturePoint.position.z);
+                heldFurniture.transform.LookAt(new Vector3(transform.position.x, 0f, transform.position.z));
+
+                if (Mouse.current.leftButton.wasPressedThisFrame || Keyboard.current.rKey.wasPressedThisFrame)
+                {
+                    heldFurniture.transform.SetParent(null);
+
+                    heldFurniture.PlaceFurniture();
+
+                    heldFurniture = null;
                 }
             }
         }
