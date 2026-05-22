@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class StoreController : MonoBehaviour
@@ -12,6 +13,8 @@ public class StoreController : MonoBehaviour
     public float currentMoney = 1000f;
 
     public Transform stockSpawnPoint, furnitureSpawnPoint;
+
+    public List<FurnitureController> shelvingCases = new List<FurnitureController>();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

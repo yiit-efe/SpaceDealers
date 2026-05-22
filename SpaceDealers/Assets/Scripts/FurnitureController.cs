@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FurnitureController : MonoBehaviour
@@ -8,10 +9,17 @@ public class FurnitureController : MonoBehaviour
 
     public float price;
 
+    public Transform standPoint;
+
+    public List<ShelfSpaceController> shelves;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        if (shelves.Count > 0)
+        {
+            StoreController.instance.shelvingCases.Add(this);
+        }
     }
 
     // Update is called once per frame
