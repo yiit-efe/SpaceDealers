@@ -20,6 +20,8 @@ public class StoreController : MonoBehaviour
     void Start()
     {
         UIController.instance.UpdateMoney(currentMoney);
+
+        AudioManager.instance.StartBGM();
     }
 
     // Update is called once per frame

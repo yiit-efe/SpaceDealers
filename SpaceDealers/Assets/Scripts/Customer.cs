@@ -19,6 +19,10 @@ public class Customer : MonoBehaviour
 
     public float waitAfterGrabbing = .5f;
 
+    private List<StockObject> stockInBag = new List<StockObject>();
+
+    private Vector3 queuePoint;
+
     public enum CustomerState
     {
         entering,
@@ -63,12 +67,20 @@ public class Customer : MonoBehaviour
                 }
                 else
                 {
-                    currentState = CustomerState.browsing;
+                    if (StoreController.instance.shelvingCases.Count > 0)
+                    {
+                        currentState = CustomerState.browsing;
 
-                    browsePointsRemain = Random.Range(1, maxBrowsePoints + 1);
-                    browsePointsRemain = Mathf.Clamp(browsePointsRemain, 1, StoreController.instance.shelvingCases.Count);
+                        browsePointsRemain = Random.Range(1, maxBrowsePoints + 1);
+                        browsePointsRemain = Mathf.Clamp(browsePointsRemain, 1, StoreController.instance.shelvingCases.Count);
 
-                    GetBrowsePoint();
+                        GetBrowsePoint();
+                    } else
+                    {
+                        StartLeaving();
+                    }
+
+                    
                 }
                 break;
 
@@ -93,7 +105,14 @@ public class Customer : MonoBehaviour
                         }
                         else
                         {
-                            StartLeaving();
+                            if (stockInBag.Count > 0)
+                            {
+                                Checkout.Instance.AddCustomerToQueue(this);
+                                currentState = CustomerState.queueing;
+                            } else
+                            {
+                                StartLeaving();
+                            }
                         }
                     }
 
@@ -104,7 +123,16 @@ public class Customer : MonoBehaviour
 
             case CustomerState.queueing:
 
-                break;
+                transform.position = Vector3.MoveTowards(transform.position, queuePoint, moveSpeed * Time.deltaTime);
+
+                if (Vector3.Distance(transform.position, queuePoint) > 0.1f)
+                {
+                   anim.SetBool("isMoving", true);
+                } else
+                {
+                    anim.SetBool("isMoving", false);
+                }
+                    break;
 
 
             case CustomerState.atCheckout:
@@ -130,25 +158,35 @@ public class Customer : MonoBehaviour
 
     public void MoveToPoint()
     {
-        anim.SetBool("isMoving", true);
-
-        Vector3 targetPosition = new Vector3(points[0].point.position.x, transform.position.y, points[0].point.position.z);
-
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-
-        transform.LookAt(targetPosition);
-
-        if (Vector3.Distance(transform.position, targetPosition) < 0.25f)
+        if (points.Count > 0)
         {
-            anim.SetBool("isMoving", false);
 
-            currentWaitTime -= Time.deltaTime;
+            bool isMoving = true;
 
-            if (currentWaitTime <= 0)
+            Vector3 targetPosition = new Vector3(points[0].point.position.x, transform.position.y, points[0].point.position.z);
+
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+
+            transform.LookAt(targetPosition);
+
+            if (Vector3.Distance(transform.position, targetPosition) < 0.25f)
             {
-                StartNextPoint();
+                isMoving = false;
+
+                currentWaitTime -= Time.deltaTime;
+
+                if (currentWaitTime <= 0)
+                {
+                    StartNextPoint();
+                }
+
             }
 
+            anim.SetBool("isMoving", isMoving);
+
+        } else
+        {
+            StartNextPoint();
         }
     }
 
@@ -192,17 +230,47 @@ public class Customer : MonoBehaviour
 
     public void GrabStock()
     {
-        shoppingBag.SetActive(true);
+     
         hasGrabbed = true;
 
-        points.Clear();
-        points.Add(new NavPoint());
-        points[0].point = currentShelfCase.standPoint;
-        points[0].waitTime = waitAfterGrabbing * Random.Range(0.75f, 1.25f);
-        currentWaitTime = points[0].waitTime;
+        int shelf = Random.Range(0, currentShelfCase.shelves.Count);
+
+        StockObject stock = currentShelfCase.shelves[shelf].GetStock();
+
+        if (stock != null)
+        {
+            stock.transform.SetParent(shoppingBag.transform);
+            stockInBag.Add(stock);
+            stock.PlaceInBag();
+
+            shoppingBag.SetActive(true);
+
+            points.Clear();
+            points.Add(new NavPoint());
+            points[0].point = currentShelfCase.standPoint;
+            points[0].waitTime = waitAfterGrabbing * Random.Range(0.75f, 1.25f);
+            currentWaitTime = points[0].waitTime;
+        }
     }
 
+    public void UpdateQueuePoint(Vector3 newPoint)
+    {
+        queuePoint = newPoint;
+        transform.LookAt(queuePoint);
+    }
 
+    public float GetTotalSpend()
+    {
+        float total= 0f;
+
+        foreach (StockObject stock in stockInBag)
+        {
+            total += stock.info.currentPrice;
+        }
+
+
+        return total;
+    }
 }
 
 [System.Serializable]
