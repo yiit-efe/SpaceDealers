@@ -55,6 +55,9 @@ public class Checkout : MonoBehaviour
 
             StoreController.instance.AddMoney(customersInQueue[0].GetTotalSpend());
 
+            // apply any potion effects (scale changes) before the customer leaves
+            customersInQueue[0].ApplyCheckoutScale();
+
             customersInQueue[0].StartLeaving();
 
             customersInQueue.RemoveAt(0);

@@ -101,6 +101,11 @@ MonoBehaviour:
   currentShelfCase: {fileID: 0}
   shoppingBag: {fileID: 7295782384288982826}
   waitAfterGrabbing: 0.5
+  enlargePotionPrefab: {fileID: -3856197071313243420, guid: 2838ce194fc760340b7d7c3a04fa7773, type: 3}
+  shrinkPotionPrefab: {fileID: -717668617239253163, guid: bab3e182f40be29409ce8180c1d525c4, type: 3}
+  perEnlargeAmount: 0.5
+  perShrinkAmount: 0.5
+  scaleLerpDuration: 0.5
   currentState: 0
   maxBrowsePoints: 5
 --- !u!1001 &7637747341563648635

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,6 +21,17 @@ public class Customer : MonoBehaviour
     public float waitAfterGrabbing = .5f;
 
     private List<StockObject> stockInBag = new List<StockObject>();
+
+    [Header("Potion settings")]
+    public StockObject enlargePotionPrefab;
+    public StockObject shrinkPotionPrefab;
+    public float perEnlargeAmount = 0.1f;
+    public float perShrinkAmount = 0.1f;
+
+    [Header("Scale animation")]
+    public float scaleLerpDuration = 0.5f;
+    private Vector3 baseScale;
+    private Coroutine scaleCoroutine;
 
     private Vector3 queuePoint;
 
@@ -49,6 +61,9 @@ public class Customer : MonoBehaviour
 
             currentWaitTime = points[0].waitTime;
         }
+
+        // record the initial scale so potion scaling is relative
+        baseScale = transform.localScale;
 
 
     }
@@ -270,6 +285,46 @@ public class Customer : MonoBehaviour
 
 
         return total;
+    }
+
+    // Adjust the customer's scale after checkout based on shopping bag contents
+    public void ApplyCheckoutScale()
+    {
+        // Use the configured potion prefabs (StockObject prefab references) to identify potions in the bag.
+        int enlargeCount = 0;
+        int shrinkCount = 0;
+
+        foreach (StockObject stock in stockInBag)
+        {
+            if (stock == null || stock.info == null) continue;
+
+            // StockInfo.stockObject holds the prefab reference used when instantiating this stock.
+            if (enlargePotionPrefab != null && stock.info.stockObject == enlargePotionPrefab) enlargeCount++;
+            if (shrinkPotionPrefab != null && stock.info.stockObject == shrinkPotionPrefab) shrinkCount++;
+        }
+
+        float scaleMultiplier = 1f + (enlargeCount * perEnlargeAmount) - (shrinkCount * perShrinkAmount);
+        scaleMultiplier = Mathf.Clamp(scaleMultiplier, 0.2f, 3.0f);
+
+        Vector3 targetScale = baseScale * scaleMultiplier;
+
+        // start animated scale change
+        if (scaleCoroutine != null) StopCoroutine(scaleCoroutine);
+        scaleCoroutine = StartCoroutine(AnimateScale(transform.localScale, targetScale, scaleLerpDuration));
+    }
+
+    private IEnumerator AnimateScale(Vector3 from, Vector3 to, float duration)
+    {
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(from, to, t / duration);
+            yield return null;
+        }
+
+        transform.localScale = to;
+        scaleCoroutine = null;
     }
 }
 
