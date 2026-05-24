@@ -152,6 +152,7 @@ public class PlayerController : MonoBehaviour
                     heldPickup = hit.collider.GetComponentInParent<StockObject>();
                     heldPickup.transform.SetParent(holdPoint);
                     heldPickup.Pickup();
+                    heldPickup.theRB.useGravity = true;
 
                     if (AudioManager.instance != null)
                     {
@@ -163,18 +164,24 @@ public class PlayerController : MonoBehaviour
 
                 if (Physics.Raycast(ray, out hit, interactionRange, whatIsStockBox))
                 {
-                    heldBox = hit.collider.GetComponentInParent<StockBoxController>();
-                    heldBox.transform.SetParent(boxHoldPoint);
-                    heldBox.Pickup();
+                    StockBoxController box = hit.collider.GetComponentInParent<StockBoxController>();
 
-                    if (heldBox.flap1.activeSelf == true)
+                    // pick up the box itself
+                    if (box != null)
                     {
-                        heldBox.OpenClose();
-                    }
+                        heldBox = box;
+                        heldBox.transform.SetParent(boxHoldPoint);
+                        heldBox.Pickup();
 
-                    if (AudioManager.instance != null)
-                    {
-                        AudioManager.instance.PlaySFX(1);
+                        if (heldBox.flap1.activeSelf == true)
+                        {
+                            heldBox.OpenClose();
+                        }
+
+                        if (AudioManager.instance != null)
+                        {
+                            AudioManager.instance.PlaySFX(1);
+                        }
                     }
 
                     return;
@@ -187,25 +194,51 @@ public class PlayerController : MonoBehaviour
 
             }
 
-            if (Mouse.current.rightButton.wasPressedThisFrame)
-            {
-                if (Physics.Raycast(ray, out hit, interactionRange, whatIsShelf))
+                if (Mouse.current.rightButton.wasPressedThisFrame)
                 {
-                    heldPickup = hit.collider.GetComponentInParent<ShelfSpaceController>().GetStock();
-
-                    if (heldPickup != null)
+                    if (Physics.Raycast(ray, out hit, interactionRange, whatIsShelf))
                     {
-                        heldPickup.transform.SetParent(holdPoint);
-                        heldPickup.Pickup();
+                        heldPickup = hit.collider.GetComponentInParent<ShelfSpaceController>().GetStock();
+
+                        if (heldPickup != null)
+                        {
+                            heldPickup.transform.SetParent(holdPoint);
+                            heldPickup.Pickup();
+                        }
+
+                        return;
                     }
 
-                    return;
-                }
+                    if (Physics.Raycast(ray, out hit, interactionRange, whatIsStockBox))
+                    {
+                        StockBoxController box = hit.collider.GetComponentInParent<StockBoxController>();
 
-                if (Physics.Raycast(ray, out hit, interactionRange, whatIsStockBox))
-                {
-                    hit.collider.GetComponentInParent<StockBoxController>().OpenClose();
-                }
+                        if (box != null)
+                        {
+                            // If flap GameObjects are active, they indicate the box is closed; deactivate them on right-click
+                            if (box.flap1 != null && box.flap1.activeSelf)
+                            {
+                                box.OpenClose();
+                            }
+                            else
+                            {
+                                // otherwise grab last item into hand
+                                StockObject grabbed = box.GrabStockFromBox(holdPoint);
+                                if (grabbed != null)
+                                {
+                                    heldPickup = grabbed;
+                                    heldPickup.theRB.useGravity = true;
+
+                                    if (AudioManager.instance != null)
+                                    {
+                                        AudioManager.instance.PlaySFX(6);
+                                    }
+                                }
+                            }
+                        }
+
+                        return;
+                    }
             }
 
 
@@ -341,7 +374,6 @@ public class PlayerController : MonoBehaviour
                             }
                         }
                     }
-
 
                 }
 

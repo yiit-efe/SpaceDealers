@@ -19,7 +19,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &7031863287882037629
 Transform:
@@ -154,6 +154,7 @@ MonoBehaviour:
     name: Water Bottle
     typeOfStock: 1
     price: 3
+    currentPrice: 0
     stockObject: {fileID: 0}
   moveSpeed: 5
   isPlaced: 0

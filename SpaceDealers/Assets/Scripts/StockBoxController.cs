@@ -129,6 +129,8 @@ public class StockBoxController : MonoBehaviour
         }
     }
 
+   
+
     public void PlaceStockOnShelf(ShelfSpaceController shelf)
     {
         if (stockInBox.Count > 0)
@@ -188,4 +190,39 @@ public class StockBoxController : MonoBehaviour
         return toReturn;
     }
 
+    // Remove a single stock object from the box and prepare it to be picked up.
+    // If handParent is provided, the object will be parented to that transform and Pickup() will be called.
+    // Returns the StockObject removed or null if box is empty.
+    public StockObject GrabStockFromBox(Transform handParent = null)
+    {
+        if (stockInBox.Count == 0) return null;
+
+        // take the last item (top of the stack)
+        StockObject toGrab = stockInBox[stockInBox.Count - 1];
+        stockInBox.RemoveAt(stockInBox.Count - 1);
+
+        // If the box is now empty, clear any label or UI
+        if (stockInBox.Count == 0 && flap1 != null)
+        {
+            // optionally close the flaps when empty
+            // but just ensure UI state elsewhere is updated
+        }
+
+        // Prepare the object for pickup
+        if (handParent != null)
+        {
+            toGrab.transform.SetParent(handParent);
+            toGrab.transform.localPosition = Vector3.zero;
+            toGrab.transform.localRotation = Quaternion.identity;
+        }
+        else
+        {
+            // unparent so it can be moved freely
+            toGrab.transform.SetParent(null);
+        }
+
+        toGrab.Pickup();
+
+        return toGrab;
+    }
 }
