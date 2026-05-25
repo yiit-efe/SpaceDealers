@@ -5,3 +5,4 @@ Press [LMB] to pickup objects or at checkout and hold to unload the boxes into s
 Press [Space] to jump [WASD] to move
 Press [RMB] to throw held objects.
 Press [Escape] to go into the main menu.
+Press [R] to pickup and place furniture.
